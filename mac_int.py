@@ -31,7 +31,7 @@ class Mac_int:
 		#Shared Variables
 		self.mac_list = [[]] 	# [time, mac addr, signal level]
 		self.white_list = []	# whitelist of mac addr
-		self.dt = 10 		# sample time in minutes
+		self.dt = 1 		# sample time in minutes
 
 		# Init wifi
 		try:
@@ -64,7 +64,7 @@ class Mac_int:
 				# Put in list			
 				self.mac_list.append([t,mac,rssi])
 
-				print "%s \t %s \t %s" % (t, mac, rssi)
+				#print "%s \t %s \t %s" % (t, mac, rssi)
 
 				self.saveRawMacAddr2file()
 				self.perodic()
@@ -130,6 +130,8 @@ class Mac_int:
 
 	# perodic updating dt
 	def perodic(self):
+		#update mac_list
+		self.update_mac_list()
 		# remove duplets in dt time interval
 		mac_list_dt = []
 		#print self.mac_list
@@ -156,8 +158,37 @@ class Mac_int:
 		
 		self.mac_list_dt = mac_list_dt
 		self.display2()
-		
+	
 
+	# remove old entities in mac_list stack	
+	def update_mac_list(self):
+		# copy list to local
+		mac_list = self.mac_list
+
+		#set point in time
+		time_now = datetime.datetime.now()
+		delta_t = time_now + datetime.timedelta(minutes = -self.dt)
+
+		#Loop
+		done = False
+		while done == False:
+			i = 0 # index var (dummy)
+			for mac in mac_list:
+				# from str to datimetime
+				time_mac = datetime.datetime.strptime(mac[0],"%Y-%m-%d %H:%M:%S")
+				# if out of time dt
+				if time_mac < delta_t:
+					print i
+					mac_list.remove(i)
+					break
+				# add 1 to index var i
+				i = i+1
+
+		# update 
+		self.mac_list = mac_list			
+
+		# Print result for debug
+		print len(mac_list)
 
 	# visualise with scrolling text
 	def display(self):
