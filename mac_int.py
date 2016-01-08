@@ -67,7 +67,7 @@ class Mac_int:
 				# Put in list			
 				self.mac_list.append([t,mac,rssi])
 
-				#print "%s \t %s \t %s" % (t, mac, rssi)
+				print "%s \t %s \t %s" % (t, mac, rssi)
 
 				self.saveRawMacAddr2file()
 				self.perodic()
@@ -175,24 +175,26 @@ class Mac_int:
 		#Loop
 		done = False
 		while done == False:
+			done = True
 			i = 0 # index var (dummy)
 			for mac in mac_list:
-				# from str to datimetime
-				print mac
-				time_mac = datetime.datetime.strptime(mac[0],"%Y-%m-%d %H:%M:%S")
-				# if out of time dt
-				if time_mac < delta_t:
-					print i
-					mac_list.remove(i)
-					break
-				# add 1 to index var i
-				i = i+1
+				if mac:		# remove empty entity
+					# from str to datimetime
+					time_mac = datetime.datetime.strptime(mac[0],"%Y-%m-%d %H:%M:%S")
+					# if out of time dt
+					if time_mac < delta_t:
+						mac_list.pop(i)
+						done = False
+						break
+					# add 1 to index var i
+					i = i+1
+			
 
 		# update 
 		self.mac_list = mac_list			
 
 		# Print result for debug
-		print len(mac_list)
+		print "Size of mac_list in memory: %d" % (len(mac_list))
 
 	# visualise with scrolling text
 	def display(self):
