@@ -167,6 +167,9 @@ class Mac_int:
 	def update_mac_list(self):
 		# copy list to local
 		mac_list = self.mac_list
+		
+		# filter out any empty
+		filter(None,mac_list)
 
 		#set point in time
 		time_now = datetime.datetime.now()
