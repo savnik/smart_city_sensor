@@ -34,12 +34,15 @@ class Mac_int:
 		self.dt = 1 		# sample time in minutes
 
 		# Init wifi
-		try:
-			Wireless(interface).setMode('Monitor')
-			Wireless(interface).setFrequency(freq)
-		except ValueError:
-			os.system("sh wifi_setup.sh")
-			return "Wifi Initialisation failed!"
+		print "Init wifi..."
+		while(1):
+			try:
+				Wireless(interface).setMode('Monitor')
+				Wireless(interface).setFrequency(freq)
+				break
+			except:
+				os.system("sh wifi_setup.sh")
+				return "Wifi Initialisation failed!"
 		
 		self.loadWhiteList()		
 
@@ -175,6 +178,7 @@ class Mac_int:
 			i = 0 # index var (dummy)
 			for mac in mac_list:
 				# from str to datimetime
+				print mac
 				time_mac = datetime.datetime.strptime(mac[0],"%Y-%m-%d %H:%M:%S")
 				# if out of time dt
 				if time_mac < delta_t:
