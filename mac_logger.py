@@ -22,7 +22,7 @@ import numpy
 class Mac_logger:
 
 
-	def __init__(self,dt=1,freq='2442 MHz',interface = 'mon0'):
+	def __init__(self,dt=1,freq='2442 MHz',interface = 'mon0', newfiletime=1):
 		# Define shared parameters
 		self.dt = dt
 		self.freq = freq
@@ -32,6 +32,10 @@ class Mac_logger:
 		self.whitelist = [] # [mac]
 		self.whitelist_update_time = 0
 		self.handler_time = 0 # updated everytime handler is called
+		self.newfiletime = newfiletime # hours before saving to new file
+		self.lastfilecreated = 0 # When the last file was created
+		#self.fw = None
+		#self.fa = None
 
 		# defaults
 
@@ -64,21 +68,27 @@ class Mac_logger:
 		# TIME!!!
 		self.handler_time = time.time() # Epoch
 		
+		# Check if it is time to make a new file
+		t = datetime.datetime.now()
+		if (t.hour >= (self.lastfilecreated + self.newfiletime)) or (t.hour >= (self.lastfilecreated + self.newfiletime - 24)):
+			self.log_data_close()
+			self.log_data_open()
+		
 		# filter the packets
 		# Check if packet is wifi
 		if packet.haslayer(Dot11):
 			# packet.type==0 is management type
 			# packet.subtype==4 is probe request
 			if packet.type == 0 and packet.subtype == 4:
-					
+
 				# extract data
 				rssi = self.siglevel(packet) if self.siglevel(packet)!=-256 else -100 # if signal level is -256 ==> Error
 				mac = packet.addr2
 				
 				# append data to list [[t,mac,rssi]]
 				self.mac_list.append([self.handler_time, mac, rssi])
-				print [self.handler_time, mac, rssi]
-				print "Size of mac_list %d" % (len(self.mac_list))
+				#print [self.handler_time, mac, rssi]
+				#print "Size of mac_list %d" % (len(self.mac_list))
 				# log to file (append)
 				self.log_data(self.handler_time, mac, rssi)
 
@@ -122,7 +132,7 @@ class Mac_logger:
 				else:
 					self.update_unique_mac_list(self.mac_list[i])
 		
-		print "size of mac list dt: %d" % (len(self.mac_list_dt))
+		#print "size of mac list dt: %d" % (len(self.mac_list_dt))
 
 	def update_unique_mac_list(self,row):
 		# Counting all unique mac addresses
@@ -232,8 +242,16 @@ class Mac_logger:
 
 	def log_data_open(self):
 		# Open log data file
-		self.fw = open('log_whitelist.txt','a')
-		self.fa = open('log_anonymous.txt','a')
+		
+		#get the hour for file
+		t = datetime.datetime.now()
+		
+		filename1 = str(t.year) + '-' + str(t.month) + '-' + str(t.day) + '-' + str(t.hour) + '-' + 'log_whitelist' + '.txt'
+		filename2 = str(t.year) + '-' + str(t.month) + '-' + str(t.day) + '-' + str(t.hour) + '-' + 'log_anonymous' + '.txt'
+		self.fw = open(filename1,'a')
+		self.fa = open(filename2,'a')
+		
+		self.lastfilecreated = t.hour
 
 	def log_data(self, t, mac, rssi):
 		# Logging data to file (Append)
