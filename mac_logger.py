@@ -27,9 +27,9 @@ class Mac_logger:
 		self.dt = dt
 		self.freq = freq
 		self.interface = interface
-		self.mac_list = numpy.array([[]]) # [[t,mac,siglevel]]
-		self.mac_list_dt = numpy.array([]) # [[t,mac,siglevel]]
-		self.whitelist = numpy.array([]) # [mac]
+		self.mac_list = [[]] # [[t,mac,siglevel]]
+		self.mac_list_dt = [[]] # [[t,mac,siglevel]]
+		self.whitelist = [] # [mac]
 		self.whitelist_update_time = 0
 		self.handler_time = 0 # updated everytime handler is called
 
@@ -62,7 +62,7 @@ class Mac_logger:
 
 	def handler(self,packet):
 		# TIME!!!
-		self.handler_time = datetime.datetime.now()
+		self.handler_time = time.time() # Epoch
 		
 		# filter the packets
 		# Check if packet is wifi
@@ -76,7 +76,7 @@ class Mac_logger:
 				mac = packet.addr2
 				
 				# append data to list [[t,mac,rssi]]
-				self.mac_list = numpy.append(self.mac_list, [self.handler_time, mac, rssi])
+				self.mac_list.append([self.handler_time, mac, rssi])
 				print [self.handler_time, mac, rssi]
 				# log to file (append)
 				self.log_data(self.handler_time, mac, rssi)
@@ -98,23 +98,22 @@ class Mac_logger:
 		# display results!
 		self.senseHatDisplay()
 		# check if whitelist needs update 
-		if self.whitelist_update_time < datetime.datetime.now()+datetime.timedelta(minutes = -self.dt):
+		if self.whitelist_update_time < time.time() - (self.dt*60):
 			self.loadWhitelist()
 
 	def update_mac_list(self):
 		# Removes old samples from list 
-		self.mac_list_dt = numpy.array([[]]) # clear uniqe list
-		# remove empty elements
-		self.mac_list = numpy.where(self.mac_list is not None)
-		#print self.mac_list[0]
+		self.mac_list_dt = [[]] # clear uniqe list
+		# filter out any empty
+		filter(None,mac_list)
+		
 		# Go through list in reversed order
 		for i in range(len(self.mac_list)-1,-1,-1):
 			mac_time = self.mac_list[i][0] 	# Extract time
-			if mac_time == 0: # empty elements fix
-				continue
+			
 			# if time is over due remove
-			if mac_time < (self.handler_time + datetime.timedelta(minutes = -self.dt)):
-				self.mac_list = numpy.delete(self.mac_list, i) # remove element from list
+			if mac_time < (self.handler_time - (self.dt *60):
+				self.mac_list.pop(i) # remove element from list
 			# check if unique
 			else:
 				self.update_unique_mac_list(self.mac_list[i])
@@ -169,10 +168,6 @@ class Mac_logger:
 	def siglevel_dt(self,low,high):
 		count = 0
 		for mac in self.mac_list_dt:
-			if mac == 0 or not mac :	# skip empty elements
-				continue
-			#print "siglevel_dt"
-			#print mac
 			# if within the interval count up
 			if mac[2] >= low and mac[2] <= high:
 				count = count+1
@@ -191,7 +186,7 @@ class Mac_logger:
 		# file syntax: [MAC]\n[MAC]\n....
 		# Filename: whitelist.txt
 
-		self.whitelist_update_time = datetime.datetime.now()
+		self.whitelist_update_time = time.time()
 
 		file = 'whitelist.txt'
 		print "Loading white list..."
@@ -200,7 +195,7 @@ class Mac_logger:
 				with open(file, 'rb') as f:
 					reader = csv.reader(f)
 					for row in reader:
-						self.whitelist = numpy.append(self.whitelist, row)
+						self.whitelist.append(row)
 						print row
 					print "Done!..."
 			except ValueError:
@@ -219,13 +214,7 @@ class Mac_logger:
 
 	def anonymous_filter(self,mac):
 		# if mac not whiteliste => return hash value
-		match = 0
-		for i in self.whitelist:
-			if i[1] == mac:
-				match = 1
-				break
-		
-		if match > 0:
+		if self.white_list.count(mac) > 0:
 			return 0
 		else:
 			hash_object = hashlib.sha256(b'mac') 	# creates a hash object
@@ -244,7 +233,7 @@ class Mac_logger:
 		# whitelist!!!
 		
 		# fix time format
-		t = time.strftime("%Y-%m-%d %H:%M:%S",t.timetuple())
+		t = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(t))
 		
 		if self.anonymous_filter(mac) != 0:
 			writer = csv.writer(self.fa)
