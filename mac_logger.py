@@ -16,7 +16,7 @@ from sense_hat import SenseHat
 import hashlib
 import os
 import numpy
-
+import SDL_DS1307
 
 
 class Mac_logger:
@@ -34,12 +34,17 @@ class Mac_logger:
 		self.handler_time = 0 # updated everytime handler is called
 		self.newfiletime = newfiletime # hours before saving to new file
 		self.lastfilecreated = 0 # When the last file was created
+		
 		#self.fw = None
 		#self.fa = None
 
 		# defaults
 
 	def run(self):
+		# init rtc
+		self.ds1307 = SDL_DS1307.SDL_DS1307(1, 0x68) # 0x68 i2c address
+		#self.ds1307.write_now() # update RTC
+
 		# init wifi module
 		print "Init wifi..."
 		# check avaliable interfaces
@@ -66,8 +71,9 @@ class Mac_logger:
 
 	def handler(self,packet):
 		# TIME!!!
-		self.handler_time = time.time() # Epoch
-		
+		#self.handler_time = time.time() # Epoch
+		self.handler_time = self.get_rtc_time() # Epoch from RTC		
+
 		# Check if it is time to make a new file
 		t = datetime.datetime.now()
 		if (t.hour >= (self.lastfilecreated + self.newfiletime)) or (t.hour >= (self.lastfilecreated + self.newfiletime - 24)):
@@ -107,9 +113,9 @@ class Mac_logger:
 		# find unique macs and add them to a new list
 		#self.count_unique_macs()
 		# display results!
-		self.senseHatDisplay()
+		#self.senseHatDisplay()
 		# check if whitelist needs update 
-		if self.whitelist_update_time < time.time() - (self.dt*60):
+		if self.whitelist_update_time < self.get_rtc_time() - (self.dt*60):
 			self.loadWhitelist()
 
 	def update_mac_list(self):
@@ -272,6 +278,12 @@ class Mac_logger:
 		# close log data file
 		self.fw.close()
 		self.fa.close()
+
+
+	def get_rtc_time(self):
+		datetime_rtc = self.ds1307.read_datetime() #datetime object
+		time_rtc = datetime_rtc.strftime('%s')# epoch
+		return float(time_rtc)
 
 
 
