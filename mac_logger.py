@@ -139,6 +139,7 @@ class Mac_logger:
 		# Counts of macs to color
 
 		# Levels of dist
+		d0 = [0,0,0]
 		d1 = self.int2rgb(self.siglevel_dt(-30,0))
 		d2 = self.int2rgb(self.siglevel_dt(-50,-31))
 		d3 = self.int2rgb(self.siglevel_dt(-70,-51))
@@ -146,14 +147,14 @@ class Mac_logger:
 
 		sense = SenseHat()
 		pixels = [
-		[0,0,0],[0,0,0],d4,d4,d4,d4,[0,0,0],[0,0,0],
-		[0,0,0],d3,d3,d3,d3,d3,d4,[0,0,0],
-		d4,d4,d3,d2,d2,d3,d3,d4,
+		d0,d0,d0,d4,d4,d0,d0,d0,
+		d0,d0,d4,d3,d3,d4,d0,d0,
+		d0,d4,d3,d2,d2,d3,d4,d0,
 		d4,d3,d2,d1,d1,d2,d3,d4,
 		d4,d3,d2,d1,d1,d2,d3,d4,
-		d4,d3,d3,d2,d2,d3,d3,d4,
-		[0,0,0],d4,d3,d3,d3,d3,d4,[0,0,0],
-		[0,0,0],[0,0,0],d4,d4,d4,d4,[0,0,0],[0,0,0]]
+		d0,d4,d3,d2,d2,d3,d4,d0,
+		d0,d0,d4,d3,d3,d4,d0,d0,
+		d0,d0,d0,d4,d4,d0,d0,d0]
 		
 		sense.set_pixels(pixels)
 
