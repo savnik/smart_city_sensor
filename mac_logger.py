@@ -200,7 +200,7 @@ class Mac_logger:
 				with open(file, 'rb') as f:
 					reader = csv.reader(f)
 					for row in reader:
-						self.white_list.append(row)
+						self.whitelist = numpy.append(self.whitelist, row)
 						print row
 					print "Done!..."
 			except ValueError:
