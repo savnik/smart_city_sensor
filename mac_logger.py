@@ -44,6 +44,10 @@ class Mac_logger:
 		# init rtc
 		self.ds1307 = SDL_DS1307.SDL_DS1307(1, 0x68) # 0x68 i2c address
 		#self.ds1307.write_now() # update RTC
+		# VCC Pin 11 Red
+		# GND Pin 13 Black
+		# SCL Pin 3  Yellow
+		# SDA Pin 2  Green
 
 		# init wifi module
 		print "Init wifi..."

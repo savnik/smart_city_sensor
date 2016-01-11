@@ -33,4 +33,4 @@ while True:
 
  print "DS1307=\t\t%s" % ds1307.read_datetime()
 
- time.sleep(10.0)
+ time.sleep(1.0)
