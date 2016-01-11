@@ -1,4 +1,4 @@
-##### mac_logger.py #####
+#### mac_logger.py #####
 # 30571 SMART CITY SENSOR
 # Date: 8/1-2015
 #
@@ -22,7 +22,7 @@ import numpy
 class Mac_logger:
 
 
-	def __init__(self,dt=10,freq='2442 MHz',interface = 'mon0'):
+	def __init__(self,dt=1,freq='2442 MHz',interface = 'mon0'):
 		# Define shared parameters
 		self.dt = dt
 		self.freq = freq
@@ -78,6 +78,7 @@ class Mac_logger:
 				# append data to list [[t,mac,rssi]]
 				self.mac_list.append([self.handler_time, mac, rssi])
 				print [self.handler_time, mac, rssi]
+				print "Size of mac_list %d" % (len(self.mac_list))
 				# log to file (append)
 				self.log_data(self.handler_time, mac, rssi)
 
@@ -105,27 +106,32 @@ class Mac_logger:
 		# Removes old samples from list 
 		self.mac_list_dt = [[]] # clear uniqe list
 		# filter out any empty
-		filter(None,mac_list)
-		
+		filter(None,self.mac_list)
+
+	
 		# Go through list in reversed order
 		for i in range(len(self.mac_list)-1,-1,-1):
-			mac_time = self.mac_list[i][0] 	# Extract time
-			
-			# if time is over due remove
-			if mac_time < (self.handler_time - (self.dt *60):
-				self.mac_list.pop(i) # remove element from list
-			# check if unique
-			else:
-				self.update_unique_mac_list(self.mac_list[i])
-
+			# if not none element
+			if self.mac_list[i]:
+				mac_time = self.mac_list[i][0] 	# Extract time
+				
+				# if time is over due remove
+				if mac_time < (self.handler_time - (self.dt *60)):
+					self.mac_list.pop(i) # remove element from list
+				# check if unique
+				else:
+					self.update_unique_mac_list(self.mac_list[i])
+		
+		print "size of mac list dt: %d" % (len(self.mac_list_dt))
 
 	def update_unique_mac_list(self,row):
 		# Counting all unique mac addresses
-		is_duplet = sum(x.count(row[1]) for x in mac_list_dt)
+		is_duplet = sum(x.count(row[1]) for x in self.mac_list_dt)
 		# if unique
 		if is_duplet < 1:
 			# Addpend to list of uniques
 			self.mac_list_dt.append(row)	
+			
 
 	def senseHatDisplay(self):
 		# Display in round formation ish
@@ -169,8 +175,9 @@ class Mac_logger:
 		count = 0
 		for mac in self.mac_list_dt:
 			# if within the interval count up
-			if mac[2] >= low and mac[2] <= high:
-				count = count+1
+			if mac:	# zero element
+				if mac[2] >= low and mac[2] <= high:
+					count = count+1
 		return count
 
 
@@ -195,8 +202,8 @@ class Mac_logger:
 				with open(file, 'rb') as f:
 					reader = csv.reader(f)
 					for row in reader:
-						self.whitelist.append(row)
-						print row
+						self.whitelist.append(row[0])
+					print self.whitelist
 					print "Done!..."
 			except ValueError:
 				print "ERROR: Whitelist not loaded"
@@ -214,10 +221,10 @@ class Mac_logger:
 
 	def anonymous_filter(self,mac):
 		# if mac not whiteliste => return hash value
-		if self.white_list.count(mac) > 0:
+		if self.whitelist.count(mac) > 0:
 			return 0
 		else:
-			hash_object = hashlib.sha256(b'mac') 	# creates a hash object
+			hash_object = hashlib.sha256(mac) 	# creates a hash object
 			hash_hex = hash_object.hexdigest()	# takes the hash and outputs it in hex
 			return hash_hex
 
