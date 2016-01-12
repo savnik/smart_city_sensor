@@ -10,7 +10,7 @@ FEATURE LIST:
 * Data logging function (time, mac, signal level)
 * Anonymised MAC address in datalog according to danish data protection law
 * Real time clock integration DS1307 using i2c
-
+* Display for SenseHat
 
 VERSIONS:
 
