@@ -9,6 +9,7 @@ close all;
 
 dt = 1
 
+display('Import data')
 % import data
 [time11,mac11,siglevel11] = import_log('1 - NE/2016-1-12-10-log_anonymous.txt')
 [time12,mac12,siglevel12] = import_log('1 - NE/2016-1-12-11-log_anonymous.txt')
@@ -46,14 +47,17 @@ siglevel4 = [siglevel41;siglevel42;siglevel43];
 display('Count of observations:')
 n_data = [length(mac1), length(mac2), length(mac3), length(mac4)]
 
-%[unique_time1, unique_mac1, unique_siglevel1] = find_unique_mac(time1, mac1, siglevel1)
+display('Calculate number of mac addr integrated over dt')
+display('Logger 1')
+[count_list_dt1, time_list_dt1] = n_mac_integrated(time1,mac1,siglevel1,dt);
+display('Logger 2')
+[count_list_dt2, time_list_dt2] = n_mac_integrated(time2,mac2,siglevel2,dt);
+display('Logger 3')
+[count_list_dt3, time_list_dt3] = n_mac_integrated(time3,mac3,siglevel3,dt);
+display('Logger 4')
+[count_list_dt14, time_list_dt4] = n_mac_integrated(time4,mac4,siglevel4,dt);
 
-[count_list_dt1, time_list_dt1] = n_mac_integrated(time1,mac1,siglevel1,dt)
-[count_list_dt2, time_list_dt2] = n_mac_integrated(time2,mac2,siglevel2,dt)
-[count_list_dt3, time_list_dt3] = n_mac_integrated(time3,mac3,siglevel3,dt)
-[count_list_dt14, time_list_dt4] = n_mac_integrated(time4,mac4,siglevel4,dt)
-
-
+display('Plotting...')
 hold on;
 plot(time1,count_list_dt1)
 plot(time2,count_list_dt2)

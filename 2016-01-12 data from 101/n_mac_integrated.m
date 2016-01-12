@@ -10,8 +10,8 @@ function [ count_list_dt, time_list_dt ] = n_mac_integrated(time,mac,siglevel,dt
 
     mac_list_dt = [mac(1)]; % macs in dt
     time_list_dt = [time(1)];
-    siglevel_list_dt = [siglevel(1)]
-    count_list_dt = []
+    siglevel_list_dt = [siglevel(1)];
+    count_list_dt = [];
 
     % input data
     for i = 2:n_data
@@ -31,9 +31,14 @@ function [ count_list_dt, time_list_dt ] = n_mac_integrated(time,mac,siglevel,dt
         time_list_dt = [time_list_dt, time(i)];
         siglevel_list_dt = [siglevel_list_dt, siglevel(i)];
 
-        % count
-        count_list_dt(i) = length(mac_list_dt);
 
+        % find unique
+        [unique_time, unique_mac, unique_siglevel] = find_unique_mac(time_list_dt, mac_list_dt, siglevel_list_dt);
+
+        % count unique data samples in window
+        count_list_dt(i) = length(unique_mac);
+
+        
         % time update
     end
 
