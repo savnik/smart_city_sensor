@@ -42,8 +42,10 @@ class Mac_logger:
 
 	def run(self):
 		# init rtc
+		print "init RTC..."
 		self.ds1307 = SDL_DS1307.SDL_DS1307(1, 0x68) # 0x68 i2c address
 		#self.ds1307.write_now() # update RTC
+		print "%s" % (self.ds1307.read_datetime())
 		# VCC Pin 11 Red
 		# GND Pin 13 Black
 		# SCL Pin 3  Yellow
@@ -52,6 +54,11 @@ class Mac_logger:
 		# init wifi module
 		print "Init wifi..."
 		# check avaliable interfaces
+		os.system("ifconfig wlan0 down")
+		os.system("iw dev wlan0 del")
+		os.system("iw phy phy0 interface add mon0 type monitor")
+		os.system("ifconfig mon0 up")
+
 		while(1):
 			try:
 				Wireless(self.interface).setMode('Monitor')
