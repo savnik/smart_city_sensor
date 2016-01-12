@@ -1,6 +1,9 @@
 function [ count_list_dt, time_list_dt ] = n_mac_integrated(time,mac,siglevel,dt)
-%N_MAC_INTEGRATED Summary of this function goes here
-%   Detailed explanation goes here
+%N_MAC_INTEGRATED Number of mac addr pressent in time interval dt
+%   time, time vektor datetime
+%   mac, mac address vector
+%   siglevel, signal level vector
+%   dt, time interval in minutes
 
     t_now = time(1); % time start
     n_data = length(mac)
