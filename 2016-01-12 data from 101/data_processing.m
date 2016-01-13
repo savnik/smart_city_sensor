@@ -1,9 +1,7 @@
-% fff
-%
-% 30571 - Smart city sensor
-% 
+%% 30571 - Smart city sensor
 % Data processing from logfiles of Mac_logger.py
 %
+%%%%%%%%%%%%%%%%%%%%%%
 clear all;
 close all;
 
@@ -31,18 +29,22 @@ display('Import data')
 time1 = [time11; time12; time13;];
 mac1 = [mac11;mac12;mac13];
 siglevel1 = [siglevel11;siglevel12;siglevel13];
+clearvars time11 time12 time13 mac11 mac12 mac13 siglevel11 siglevel12 siglevel13
 
 time2 = [time21; time22; time23;];
 mac2 = [mac21;mac22;mac23];
 siglevel2 = [siglevel21;siglevel22;siglevel23];
+clearvars time21 time22 time23 mac21 mac22 mac23 siglevel21 siglevel22 siglevel23
 
-time3 = [time31; time32; time33; time43];
+time3 = [time31; time32; time33; time34];
 mac3 = [mac31;mac32;mac33; mac34];
 siglevel3 = [siglevel31;siglevel32;siglevel33; siglevel34];
+clearvars time31 time32 time33 time34 mac31 mac32 mac33 mac34 siglevel31 siglevel32 siglevel33 siglevel34
 
 time4 = [time41; time42; time43;];
 mac4 = [mac41;mac42;mac43];
 siglevel4 = [siglevel41;siglevel42;siglevel43];
+clearvars time41 time42 time43 mac41 mac42 mac43 siglevel41 siglevel42 siglevel43
 
 display('Count of observations:')
 n_data = [length(mac1), length(mac2), length(mac3), length(mac4)]

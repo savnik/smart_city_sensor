@@ -6,7 +6,7 @@ function [ count_list_dt, time_list_dt ] = n_mac_integrated(time,mac,siglevel,dt
 %   dt, time interval in minutes
 
     t_now = time(1); % time start
-    n_data = length(mac)
+    n_data = length(mac);
 
     mac_list_dt = [mac(1)]; % macs in dt
     time_list_dt = [time(1)];
