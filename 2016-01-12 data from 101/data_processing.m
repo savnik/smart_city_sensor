@@ -5,7 +5,7 @@
 clear all;
 close all;
 
-dt = 5
+dt = 1
 
 display('Import data')
 % import data
@@ -49,7 +49,7 @@ clearvars time41 time42 time43 mac41 mac42 mac43 siglevel41 siglevel42 siglevel4
 display('Count of observations:')
 n_data = [length(mac1), length(mac2), length(mac3), length(mac4)]
 
-%%
+
 display('Calculate number of mac addr integrated over dt')
 display('Logger 1')
 [count_list_dt1, time_list_dt1] = n_mac_integrated(time1,mac1,siglevel1,dt);
@@ -67,6 +67,9 @@ plot(time_list_dt2,count_list_dt2)
 plot(time_list_dt3,count_list_dt3)
 plot(time_list_dt4,count_list_dt4)
 legend('NE','SE','SW','NW')
+xlabel('Time')
+ylabel('#MAC')
+title('101 Cantine 12/1 2016')
 grid on;
 hold off;
 
