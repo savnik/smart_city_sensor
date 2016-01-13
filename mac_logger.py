@@ -266,8 +266,8 @@ class Mac_logger:
 		
 		#filename1 = str(self.t.year) + '-' + str(self.t.month) + '-' + str(self.t.day) + '-' + str(self.t.hour) + '-' + 'log_whitelist' + '.txt'
 		#filename2 = str(self.t.year) + '-' + str(self.t.month) + '-' + str(self.t.day) + '-' + str(self.t.hour) + '-' + 'log_anonymous' + '.txt'
-		filename1 = time.strftime("%Y-%m-%d-%H-log_whitelist.txt",time.localtime(t))
-		filename2 = time.strftime("%Y-%m-%d-%H-log_anonymous.txt",time.localtime(t))
+		filename1 = time.strftime("%Y-%m-%d-%H-log_whitelist.txt",time.localtime(self.handler_time))
+		filename2 = time.strftime("%Y-%m-%d-%H-log_anonymous.txt",time.localtime(self.handler_time))
 		
 		self.fw = open(filename1,'a')
 		self.fa = open(filename2,'a')
