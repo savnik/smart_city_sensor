@@ -32,11 +32,11 @@ function [ count_list_dt, t_vec ] = n_mac_integrated(time,mac,siglevel,dt)
         % add new data at t_now
         for j = 2:length(mac) % run from 2 because dataset 1 has been added!
             if t_now >= time(j) && time(j) > t_now-duration(0,dt,0) % time leq to now AND > t_now-dt
-                mac_list_dt = [mac_list_dt, mac(i)];
+                mac_list_dt = [mac_list_dt, mac(j)];
                 %mac = mac(j+1:length(mac)); % removes data from orgininal list
-                time_list_dt = [time_list_dt, time(i)];
+                time_list_dt = [time_list_dt, time(j)];
                 %time = time(j+1:length(time)); % removes data from orgininal list
-                siglevel_list_dt = [siglevel_list_dt, siglevel(i)];
+                siglevel_list_dt = [siglevel_list_dt, siglevel(j)];
                 %siglevel = siglevel(j+1:length(siglevel)); % removes data from orgininal list
                 
             elseif time(j) > t_now % if time in furture break out
