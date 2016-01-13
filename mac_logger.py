@@ -46,6 +46,7 @@ class Mac_logger:
 		self.ds1307 = SDL_DS1307.SDL_DS1307(1, 0x68) # 0x68 i2c address
 		#self.ds1307.write_now() # update RTC
 		print "%s" % (self.ds1307.read_datetime())
+		self.t = self.ds1307.read_datetime()
 		# VCC Pin 11 Red
 		# GND Pin 13 Black
 		# SCL Pin 3  Yellow
@@ -86,8 +87,9 @@ class Mac_logger:
 		self.handler_time = self.get_rtc_time() # Epoch from RTC		
 
 		# Check if it is time to make a new file
-		t = datetime.datetime.now()
-		if (t.hour >= (self.lastfilecreated + self.newfiletime)) or (t.hour >= (self.lastfilecreated + self.newfiletime - 24)):
+		#t = datetime.datetime.now()
+		self.t = self.ds1307.read_datetime()
+		if (self.t.hour >= (self.lastfilecreated + self.newfiletime)) or (self.t.hour >= (self.lastfilecreated + self.newfiletime - 24)):
 			self.log_data_close()
 			self.log_data_open()
 		
@@ -261,14 +263,16 @@ class Mac_logger:
 		# Open log data file
 		
 		#get the hour for file
-		t = datetime.datetime.now()
 		
-		filename1 = str(t.year) + '-' + str(t.month) + '-' + str(t.day) + '-' + str(t.hour) + '-' + 'log_whitelist' + '.txt'
-		filename2 = str(t.year) + '-' + str(t.month) + '-' + str(t.day) + '-' + str(t.hour) + '-' + 'log_anonymous' + '.txt'
+		#filename1 = str(self.t.year) + '-' + str(self.t.month) + '-' + str(self.t.day) + '-' + str(self.t.hour) + '-' + 'log_whitelist' + '.txt'
+		#filename2 = str(self.t.year) + '-' + str(self.t.month) + '-' + str(self.t.day) + '-' + str(self.t.hour) + '-' + 'log_anonymous' + '.txt'
+		filename1 = time.strftime("%Y-%m-%d-%H-log_whitelist.txt",time.localtime(t))
+		filename2 = time.strftime("%Y-%m-%d-%H-log_anonymous.txt",time.localtime(t))
+		
 		self.fw = open(filename1,'a')
 		self.fa = open(filename2,'a')
 		
-		self.lastfilecreated = t.hour
+		self.lastfilecreated = self.t.hour
 
 	def log_data(self, t, mac, rssi):
 		# Logging data to file (Append)
