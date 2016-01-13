@@ -60,10 +60,10 @@ display('Logger 4')
 
 display('Plotting...')
 hold on;
-plot(time1,count_list_dt1)
-plot(time2,count_list_dt2)
-plot(time3,count_list_dt3)
-plot(time4,count_list_dt4)
+plot(time_list_dt1,count_list_dt1)
+plot(time_list_dt2,count_list_dt2)
+plot(time_list_dt3,count_list_dt3)
+plot(time_list_dt4,count_list_dt4)
 legend('1 NE','2 SE', '3 SW', '4 NW')
 grid on;
 hold off;
