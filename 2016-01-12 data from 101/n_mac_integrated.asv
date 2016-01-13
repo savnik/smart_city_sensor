@@ -1,15 +1,15 @@
-function [ count_list_dt, t_vec ] = n_mac_integrated(time,mac,siglevel,dt)
+function [ count_list_dt, time_list_dt ] = n_mac_integrated(time,mac,siglevel,dt)
 %N_MAC_INTEGRATED Number of mac addr pressent in time interval dt
 %   time, time vektor datetime
 %   mac, mac address vector
 %   siglevel, signal level vector
 %   dt, time interval in minutes
 
-        n_data = length(mac);
+    n_data = length(mac);
 
     t_now = time(1); % time start
     t_end = time(n_data); % time end
-    t_vec = t_now:duration(0,dt,0):t_end; % time vector
+    t_vec = time1(1):duration(0,0,1):time1(100); % time ve
 
     mac_list_dt = [mac(1)]; % macs in dt
     time_list_dt = [time(1)];
@@ -17,9 +17,9 @@ function [ count_list_dt, t_vec ] = n_mac_integrated(time,mac,siglevel,dt)
     count_list_dt = [];
 
     % input data
-    for i = 1:length(t_vec)
+    for i = 2:n_data
         % update mac_list_dt (remove old)
-        t_now = t_vec(i);
+        t_now = time(i);
         for j = length(mac_list_dt):-1:1    % reversed order
             if time_list_dt(j) < t_now - minutes(dt)
                 mac_list_dt = mac_list_dt(j:length(mac_list_dt));
@@ -29,20 +29,11 @@ function [ count_list_dt, t_vec ] = n_mac_integrated(time,mac,siglevel,dt)
             end
         end
 
-        % add new data at t_now
-        for j = 2:length(mac) % run from 2 because dataset 1 has been added!
-            if t_now >= time(j) && time(j) > t_now-duration(0,dt,0) % time leq to now AND > t_now-dt
-                mac_list_dt = [mac_list_dt, mac(i)];
-                %mac = mac(j+1:length(mac)); % removes data from orgininal list
-                time_list_dt = [time_list_dt, time(i)];
-                %time = time(j+1:length(time)); % removes data from orgininal list
-                siglevel_list_dt = [siglevel_list_dt, siglevel(i)];
-                %siglevel = siglevel(j+1:length(siglevel)); % removes data from orgininal list
-                
-            elseif time(j) > t_now % if time in furture break out
-                break
-            end
-        end
+        % add new data
+        mac_list_dt = [mac_list_dt, mac(i)];
+        time_list_dt = [time_list_dt, time(i)];
+        siglevel_list_dt = [siglevel_list_dt, siglevel(i)];
+
 
         % find unique
         [unique_time, unique_mac, unique_siglevel] = find_unique_mac(time_list_dt, mac_list_dt, siglevel_list_dt);
