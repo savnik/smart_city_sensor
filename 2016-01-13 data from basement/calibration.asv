@@ -27,18 +27,12 @@ grid on;
 hold off;
 
 %% Calibrating PK and a
-%syms a PK
-%d = 20; % dist in meters
-d(1:length(siglevel_filtered)) = 20;
-myownfittype = fittype('dist_to_rssi(d, PK, a)','independent', {'d'})
-myownfit = fit(d', siglevel_filtered', myownfittype)
+d = 20; % dist in meters
+PK = siglevel_filtered+10*a*log10(d); % P-K constant
+PK_mean = mean(PK);
 
-%%
-PK = -9.431;
-a = 3.717;
-
-%% Calculating dist
-d = 10.^((-PK+siglevel_filtered)/(-10*a));
+% Calculating dist
+d = 10.^((-PK_mean+siglevel_filtered)/(-10*a));
 d_mean = mean(d)
 
 figure;
