@@ -52,7 +52,7 @@ time4 = [time49; time40; time41; time42; time43];
 mac4 = [mac49; mac40; mac41;mac42;mac43];
 siglevel4 = [siglevel49; siglevel40; siglevel41;siglevel42;siglevel43];
 
-[final_time, final_mac, final_signal] = get_merged(time1, time2, time3, time4, mac1, mac2, mac3, mac4, siglevel1, siglevel2, siglevel3, siglevel4);
+[final_time, final_mac, final_signal] = get_merged_to_file(time1, time2, time3, time4, mac1, mac2, mac3, mac4, siglevel1, siglevel2, siglevel3, siglevel4);
 
 % Plot of overall (to check that working)
 % [count_list_dt1, time_list_dt1] = n_mac_integrated(final_time,final_mac,final_signal,(60/60));
