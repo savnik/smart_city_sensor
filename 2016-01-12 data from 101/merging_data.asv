@@ -119,7 +119,7 @@ hold on;
     for j = 1:length(final_mac)
         if strcmp(final_mac(j), secondname)
             for k = 1:4
-                if final_signal(k,j) ~= -100   % remove all -100 as noise                 
+                %if final_signal(k,j) ~= -100                    
                     if k == 1
                         temp_sig1 = [ temp_sig1, final_signal(k,j)];
                         temp_time1 = [ temp_time1, final_time(j)];
@@ -134,7 +134,7 @@ hold on;
                         temp_time4 = [ temp_time4, final_time(j)];
                     end
                          
-                end
+                %end
             end
         end
     end
