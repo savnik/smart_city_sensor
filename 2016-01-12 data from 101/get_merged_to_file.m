@@ -291,8 +291,4 @@ final_time1 = {}
 for i = 1:length(final_time)
 final_time1 = [final_time1, datenum(datestr(final_time(i)))]
 end
-%save('test.txt', 'final_time')%, 'final_mac', 'final_signal', '-ascii');
-fileID = fopen('test.txt','w');
-formatSpec = '%f; %f \n';
-fprintf(formatSpec,final_time1)
-fclose(fileID);
+save('test.mat', 'final_time1', 'final_mac', 'final_signal');%use import data to open the file
