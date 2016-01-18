@@ -3,10 +3,10 @@ function [final_time, final_mac, final_signal] = get_merged(time1, time2, time3,
 %
 % 30571 - Smart city sensor
 % 
-% Get the merged data from all the lists (precision: dt) and save to
-% file. It removes all entries with the year 2000 (bug)
+% Get the merged data from all the lists (precision: 1 second) and save to
+% file
 %
-dt = 2;
+dt = 1;
 
 % Find out the earliest time and final time
 t_first = min([time1(1) time2(1) time3(1) time4(1)]);
@@ -20,7 +20,7 @@ final_signal = [[]];
 %Iterate through time
 while t_now <= t_last
     %iterate through list 1
-    for i = length(time1):-1:1
+    for i = length(time1):-dt:1
         %if time in list 1
         if time1(i) <= t_now
             %empty variables containing other signals
@@ -28,7 +28,7 @@ while t_now <= t_last
             temp3 = -100;
             temp4 = -100;
             %find similar in the other lists. First list 2
-            for j = length(time2):-1:1                
+            for j = length(time2):-dt:1                
                 % same time
                 if time2(j) <= time1(i)
                     % same mac
@@ -43,7 +43,7 @@ while t_now <= t_last
                 end
             end
             % Now list 3
-            for j = length(time3):-1:1                
+            for j = length(time3):-dt:1                
                 % same time
                 if time3(j) <= time1(i)
                     % same mac
@@ -58,7 +58,7 @@ while t_now <= t_last
                 end
             end
             %finally list 4
-            for j = length(time4):-1:1                
+            for j = length(time4):-dt:1                
                 % same time
                 if time4(j) <= time1(i)
                     % same mac
@@ -86,7 +86,7 @@ while t_now <= t_last
     end
     
     %iterate through list 2
-    for i = length(time2):-1:1
+    for i = length(time2):-dt:1
         %if time in list 1
         if time2(i) <= t_now
             %empty variables containing other signals
@@ -94,7 +94,7 @@ while t_now <= t_last
             temp3 = -100;
             temp4 = -100;
             %find similar in the other lists. First list 2
-            for j = length(time1):-1:1                
+            for j = length(time1):-dt:1                
                 % same time
                 if time1(j) <= time2(i)
                     % same mac
@@ -109,7 +109,7 @@ while t_now <= t_last
                 end
             end
             % Now list 3
-            for j = length(time3):-1:1                
+            for j = length(time3):-dt:1                
                 % same time
                 if time3(j) <= time2(i)
                     % same mac
@@ -124,7 +124,7 @@ while t_now <= t_last
                 end
             end
             %finally list 4
-            for j = length(time4):-1:1                
+            for j = length(time4):-dt:1                
                 % same time
                 if time4(j) <= time2(i)
                     % same mac
@@ -152,7 +152,7 @@ while t_now <= t_last
     end
     
     %iterate through list 3
-    for i = length(time3):-1:1
+    for i = length(time3):-dt:1
         %if time in list 1
         if time3(i) <= t_now
             %empty variables containing other signals
@@ -160,7 +160,7 @@ while t_now <= t_last
             temp1 = -100;
             temp4 = -100;
             %find similar in the other lists. First list 2
-            for j = length(time2):-1:1                
+            for j = length(time2):-dt:1                
                 % same time
                 if time2(j) <= time3(i)
                     % same mac
@@ -175,7 +175,7 @@ while t_now <= t_last
                 end
             end
             % Now list 3
-            for j = length(time1):-1:1                
+            for j = length(time1):-dt:1                
                 % same time
                 if time1(j) <= time3(i)
                     % same mac
@@ -190,7 +190,7 @@ while t_now <= t_last
                 end
             end
             %finally list 4
-            for j = length(time4):-1:1                
+            for j = length(time4):-dt:1                
                 % same time
                 if time4(j) <= time3(i)
                     % same mac
@@ -218,7 +218,7 @@ while t_now <= t_last
     end
     
     %iterate through list 4
-    for i = length(time4):-1:1
+    for i = length(time4):-dt:1
         %if time in list 1
         if time4(i) <= t_now
             %empty variables containing other signals
@@ -226,7 +226,7 @@ while t_now <= t_last
             temp3 = -100;
             temp1 = -100;
             %find similar in the other lists. First list 2
-            for j = length(time2):-1:1                
+            for j = length(time2):-dt:1                
                 % same time
                 if time2(j) <= time4(i)
                     % same mac
@@ -241,7 +241,7 @@ while t_now <= t_last
                 end
             end
             % Now list 3
-            for j = length(time3):-1:1                
+            for j = length(time3):-dt:1                
                 % same time
                 if time3(j) <= time4(i)
                     % same mac
@@ -256,7 +256,7 @@ while t_now <= t_last
                 end
             end
             %finally list 4
-            for j = length(time1):-1:1                
+            for j = length(time1):-dt:1                
                 % same time
                 if time1(j) <= time4(i)
                     % same mac
