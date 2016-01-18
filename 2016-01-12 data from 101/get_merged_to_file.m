@@ -287,8 +287,10 @@ while t_now <= t_last
     t_now = t_now + seconds(dt);
 end
 
+% Unused, save as epoch
 final_time1 = {}
 for i = 1:length(final_time)
 final_time1 = [final_time1, datenum(datestr(final_time(i)))]
 end
-save('test.mat', 'final_time1', 'final_mac', 'final_signal');%use import data to open the file
+
+save('test.mat', 'final_time', 'final_mac', 'final_signal');%use import data to open the file
