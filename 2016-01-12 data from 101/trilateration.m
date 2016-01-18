@@ -5,14 +5,20 @@
 clear all;
 close all;
 
-load('test.mat')
+load('new_merged.mat')
 
 % Observation points position
-A = [0,0];
-B = [0,15.606];
-C = [24.325+22.311,15.101];
-D = [19.641+23.601,0];
-observation_positions = [A;B;C;D];
+SW = [0,0]; % SW
+NW = [0,15.606]; % NW
+NE = [24.325+22.311,15.101]; % NE
+SE = [19.641+23.601,0]; % SE
+observation_positions = [SW;NW;NE;SE]; % Initial
+%observation_positions = [SW;NW;NE;SE]; % orienting north lars
+%observation_positions = [NW;NE;SE;SW]; % orienting west lars
+%observation_positions = [NE;SE;SW;NW]; % orienting north peter
+%observation_positions = [SW;NW;NE;SE]; % orienting peter guess
+
+%
 
 % Parameters for converting RSS to distance
 PK = -25;
@@ -26,9 +32,10 @@ a = 2.5;
 x = [];
 y = [];
 data_log = {};
-
+%figure
+%hold on;
 % for each sample
-[n,m] = size(final_signal)
+[n,m] = size(final_signal);
 for i = 1:m
     
     % guessing a starting point at center of cantine
@@ -37,6 +44,7 @@ for i = 1:m
 
     x_log = [];
     y_log = [];
+    %epsilon_log = [];
  
     % iterate until delta x or delta y < 5m
     not_done = true;
@@ -63,18 +71,28 @@ for i = 1:m
                 a_i(j) = sqrt((x_i-x_star)^2+(y_i-y_star)^2);
                 A(k,1) = -(x_i-x_star)/a_i(j);
                 A(k,2) = -(y_i-y_star)/a_i(j);
+                %A(k,3) = 1;
                 B(k) = r(j)-a_i(j); 
+                
+                % plot circles
+                th = 0:pi/50:2*pi;
+                xunit = r(j) .* cos(th) + x_i;
+                yunit = r(j) .* sin(th) + y_i;
+                %plot(xunit, yunit,'g');
+                
             end
             %A
             %B
             %k
         end % for each obervation point
         if k >= 3
-            delta_position= A\(B');
+            delta_position = A\(B');
             x_star = x_star+delta_position(1);
             y_star = y_star+delta_position(2);
+            %epsilon = delta_position(3);
             x_log = [x_log, x_star];
             y_log = [y_log, y_star];
+            %epsilon_log = [epsilon_log epsilon];
        
             % check if done
             if (sqrt(delta_position(1)^2+delta_position(2)^2) <= 1)
@@ -92,6 +110,9 @@ for i = 1:m
                 data_log{n,5} = y_star;
                 data_log{n,6} = length(x_log);
                 data_log{n,7} = i;
+                
+                
+                
             end
             
             if length(x_log) > 500
@@ -103,15 +124,21 @@ for i = 1:m
        end
     end % while not_done
 end
+%hold off;
 
 % plot
+figure;
 hold on;
 grid on;
-plot(observation_positions(:,1),observation_positions(:,2),'b*')
-plot(x,y,'r*')
-
 legend('Observation units','Esitmation process')
-%xlim([-10,80])
+%xlim([-40,80])
+%ylim([-40,40])
+plot(observation_positions(:,1),observation_positions(:,2),'b*')
+for i = 1:length(x)
+    plot(x(i),y(i),'r*')
+    %pause(0.5)
+end
+
 hold off;
 
 
