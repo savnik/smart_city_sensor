@@ -97,7 +97,8 @@ mac_filtered = [mac_filtered mac_filtered_f mac_filtered_b];
 siglevel_filtered = [siglevel_filtered siglevel_filtered_f siglevel_filtered_b];
 d_tmp(1:length(siglevel_filtered_f)+length(siglevel_filtered_b)) = 0.01;
 d = d_tmp;
-mean0 = mean([siglevel_filtered_f siglevel_filtered_b])
+
+mean0 = mean(siglevel_filtered_f siglevel_filtered_b)
 
 % 5m
 % forward
@@ -198,7 +199,7 @@ siglevel_filtered = [siglevel_filtered siglevel_filtered_f];
 d_tmp = [];
 d_tmp(1:length(siglevel_filtered_f)) = 30;
 d = [d d_tmp];
-mean30 = mean(siglevel_filtered_f)
+mean30
 
 %theory
 d_t = 0:0.1:50;
@@ -215,7 +216,7 @@ plot(d_t,PK-10*a*log10(d_t))
 PK = -25;
 a = 2.5;
 plot(d_t,PK-10*a*log10(d_t))
-plot(d_t,-0.5716*d_t-40.4976)
+plot(d_t,-0.6248*d_t-15.5422)
 %plot(d_0m,siglevel_filtered_0m,'.')
 %plot(d_5m,siglevel_filtered_5m,'.')
 %plot(d_10m,siglevel_filtered_10m,'.')
@@ -225,7 +226,7 @@ plot(d_t,-0.5716*d_t-40.4976)
 %plot(d_30m,siglevel_filtered_30m,'.')
 grid on;
 xlabel('Distance [m]')
-ylabel('RSS [dB]')
+ylabel('RSSI [db]')
 legend('Observations','Logarithm Matlab fit','Logarithm Manual fit','Poly fit')
 hold off;
 %%
@@ -270,8 +271,8 @@ myownfit = fit(d', siglevel_filtered', myownfittype)
 % a =      0.3131  (0.2729, 0.3533)
 
 
-polyfit(d,siglevel_filtered,1)
-% -0.5716  -40.4976
+polyfit(siglevel_filtered,d,1)
+% -0.6248  -15.5422
 
 %%
 hold on;
